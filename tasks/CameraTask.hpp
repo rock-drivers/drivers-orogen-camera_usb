@@ -1,24 +1,29 @@
 /* Generated from orogen/lib/orogen/templates/tasks/Task.hpp */
 
-#ifndef OROGEN_CAMERA_USB_TASK_TASK_HPP
-#define OROGEN_CAMERA_USB_TASK_TASK_HPP
+#ifndef CAMERA_USB_CAMERATASK_TASK_HPP
+#define CAMERA_USB_CAMERATASK_TASK_HPP
 
-#include "orogen_camera_usb/TaskBase.hpp"
-#include "camera_usb/cam_usb.h"
+#include "camera_usb/CameraTaskBase.hpp"
 
-namespace orogen_camera_usb {
-    class Task : public TaskBase
+#include "camera_base/TaskBase.hpp"
+#include "frame_helper/FrameHelper.h"
+#include "camera_interface/CamInterface.h"
+
+#include "camera_usb/cam_usb.h" // Driver
+
+namespace camera_usb {
+    class CameraTask : public CameraTaskBase
     {
-	friend class TaskBase;
+	friend class CameraTaskBase;
     protected:
         camera::CamInfo* mCamInfo;
 
 
     public:
-        Task(std::string const& name = "orogen_camera_usb::Task");
-        Task(std::string const& name, RTT::ExecutionEngine* engine);
+        CameraTask(std::string const& name = "orogen_camera_usb::CameraTask");
+        CameraTask(std::string const& name, RTT::ExecutionEngine* engine);
 
-	~Task();
+	~CameraTask();
 
     void configureCamera();
 

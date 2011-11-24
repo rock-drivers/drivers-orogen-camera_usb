@@ -1,10 +1,10 @@
-name "orogen_camera_usb"
+name "camera_usb"
 
 using_library "camera_usb"
 using_task_library "camera_base"
 import_types_from "base"
 
-task_context "Task" do
+task_context "CameraTask" do
     subclasses "camera_base::Task"
 
     property('camera_device', 'string','/dev/video0').
@@ -29,11 +29,11 @@ task_context "Task" do
     fd_driven
 end
 
-deployment "orogen_camera_usb_test" do
+deployment "camera_usb_test" do
     do_not_install
 
     # Declares it as periodic, with a period of 100ms
-    m = task("orogen_camera_usb", "Task").
+    m = task("camera_usb_test", "CameraTask").
         periodic(0.1)
     m.start
 end

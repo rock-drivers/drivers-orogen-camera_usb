@@ -1,28 +1,28 @@
 /* Generated from orogen/lib/orogen/templates/tasks/Task.cpp */
 
-#include "Task.hpp"
+#include "CameraTask.hpp"
 
-using namespace orogen_camera_usb;
+using namespace camera_usb;
 
-Task::Task(std::string const& name)
-    : TaskBase(name), mCamInfo(NULL)
+CameraTask::CameraTask(std::string const& name)
+    : CameraTaskBase(name)
 {
 }
 
-Task::Task(std::string const& name, RTT::ExecutionEngine* engine)
-    : TaskBase(name, engine)
+CameraTask::CameraTask(std::string const& name, RTT::ExecutionEngine* engine)
+    : CameraTaskBase(name, engine)
 {
 }
 
-Task::~Task()
+CameraTask::~CameraTask()
 {
 }
 
-void Task::configureCamera() {
+void CameraTask::configureCamera() {
     using namespace camera;
 
-    cam_interface = (camera::CamInterface*)new camera::CamUsb(_camera_device.value());
-    std::vector<camera::CamInfo> cam_infos;
+    cam_interface = (CamInterface*)new CamUsb(_camera_device.value());
+    std::vector<CamInfo> cam_infos;
     try {
         if(cam_interface->listCameras(cam_infos) > 0) {
             if(cam_interface->open(cam_infos[0])) {
@@ -106,36 +106,37 @@ void Task::configureCamera() {
     camera_base::Task::configureCamera();
 }
 
+
 /// The following lines are template definitions for the various state machine
-// hooks defined by Orocos::RTT. See Task.hpp for more detailed
+// hooks defined by Orocos::RTT. See CameraTask.hpp for more detailed
 // documentation about them.
 
-// bool Task::configureHook()
+// bool CameraTask::configureHook()
 // {
-//     if (! TaskBase::configureHook())
+//     if (! CameraTaskBase::configureHook())
 //         return false;
 //     return true;
 // }
-// bool Task::startHook()
+// bool CameraTask::startHook()
 // {
-//     if (! TaskBase::startHook())
+//     if (! CameraTaskBase::startHook())
 //         return false;
 //     return true;
 // }
-// void Task::updateHook()
+// void CameraTask::updateHook()
 // {
-//     TaskBase::updateHook();
+//     CameraTaskBase::updateHook();
 // }
-// void Task::errorHook()
+// void CameraTask::errorHook()
 // {
-//     TaskBase::errorHook();
+//     CameraTaskBase::errorHook();
 // }
-// void Task::stopHook()
+// void CameraTask::stopHook()
 // {
-//     TaskBase::stopHook();
+//     CameraTaskBase::stopHook();
 // }
-// void Task::cleanupHook()
+// void CameraTask::cleanupHook()
 // {
-//     TaskBase::cleanupHook();
+//     CameraTaskBase::cleanupHook();
 // }
 

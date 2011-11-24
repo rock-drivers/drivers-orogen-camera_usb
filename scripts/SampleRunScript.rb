@@ -6,29 +6,29 @@ include Orocos
 Orocos.initialize
 
 # setup the environment so that ruby can find the test deployment
-ENV['PKG_CONFIG_PATH'] = "/home/neo/Desktop/orogen_camera_usb/build:#{File.expand_path("..", File.dirname(__FILE__))}/build:#{ENV['PKG_CONFIG_PATH']}"
+# ENV['PKG_CONFIG_PATH'] = "/home/neo/Desktop/orogen_camera_usb/build:#{File.expand_path("..", File.dirname(__FILE__))}/build:#{ENV['PKG_CONFIG_PATH']}"
 
-Orocos.run 'orogen_camera_usb_test' do
-    camera = TaskContext.get 'Task'  
+Orocos.run 'camera_usb_test' do
+    camera = TaskContext.get 'CameraTask'  
 
     #  Orocos.log_all_ports
 
 
-      sleep 1
-
-      camera.grab_mode = :Continuously
-      camera.configure
-      camera.start
     sleep 1
 
-      #viewer = TaskContext.get 'camera_viewer'
-      #viewer.frame.connect_to camera.frame
+    camera.grab_mode = :Continuously
+    camera.configure
+    camera.start
+    sleep 1
 
-      #viewer.start
+    #viewer = TaskContext.get 'camera_viewer'
+    #viewer.frame.connect_to camera.frame
 
-      for i in (1..1000000)
-	    sleep 0.01
-      end 
+    #viewer.start
 
-      STDERR.puts "shutting down"
+    for i in (1..1000000)
+        sleep 0.01
+    end 
+
+    STDERR.puts "shutting down"
 end
