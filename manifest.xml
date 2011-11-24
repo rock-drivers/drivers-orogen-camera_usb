@@ -1,0 +1,12 @@
+<package>
+  <description brief="Integrates the usb-driver into the framework allows to request images from webcams and gumstix cameras.">
+  
+  </description>
+  <author>Stefan Haase/stefan.haase@dfki.de</author>
+  <license></license>
+  <url>http://</url>
+  <logo>http://</logo>
+  <depend package="base/types" />
+  <depend package="drivers/orogen/camera_base" />
+  <depend package="drivers/camera_usb" />
+</package>

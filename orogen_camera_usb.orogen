@@ -1,0 +1,40 @@
+name "orogen_camera_usb"
+
+using_library "camera_usb"
+using_task_library "camera_base"
+import_types_from "base"
+
+task_context "Task" do
+    subclasses "camera_base::Task"
+
+    property('camera_device', 'string','/dev/video0').
+    	doc 'camera device, default is /dev/video0'
+
+    # Additional attributes.
+    # INTs
+    property('brightness', 'int', 133).
+        doc 'Black level of the image'
+    property('contrast', 'int', 5).
+        doc 'Picture contrast or luma gain'
+    property('saturation', 'int', 83).
+        doc 'Picture color saturation or chroma gain'
+    property('sharpness', 'int', 25).
+        doc 'Adjust the sharpness, set minimal value (0) to disable the filter'
+    property('backlight_compensation', 'int', 0).
+        doc 'Adjust the backlight compensation, set minimal value (0) to disable'
+    # ENUMs
+    property('power_line_frequency', 'string','60Hz').
+    	doc 'Enable to avoid flicker, values (disabled, 50Hz, 60Hz, none)'
+
+    fd_driven
+end
+
+deployment "orogen_camera_usb_test" do
+    do_not_install
+
+    # Declares it as periodic, with a period of 100ms
+    m = task("orogen_camera_usb", "Task").
+        periodic(0.1)
+    m.start
+end
+
