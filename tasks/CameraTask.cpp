@@ -7,35 +7,42 @@ using namespace camera_usb;
 CameraTask::CameraTask(std::string const& name)
     : CameraTaskBase(name)
 {
+    #if PRINT_DEBUG
+    std::cout << "CameraTask: constructor 1" << std::endl;
+    #endif
+    // ggf. weitere parameter setzen.
+    _camera_format.set(base::samples::frame::MODE_PJPG);
 }
 
 CameraTask::CameraTask(std::string const& name, RTT::ExecutionEngine* engine)
     : CameraTaskBase(name, engine)
 {
+    #if PRINT_DEBUG
+    std::cout << "CameraTask: constructor 2" << std::endl;
+    #endif
 }
 
 CameraTask::~CameraTask()
 {
+    #if PRINT_DEBUG
+    std::cout << "CameraTask: destructor" << std::endl;
+    #endif
+    if(cam_interface != NULL) {
+        delete cam_interface;
+        cam_interface = NULL;
+    }
 }
 
 void CameraTask::configureCamera() {
+    #if PRINT_DEBUG
+    std::cout << "CameraTask: configureCamera" << std::endl;
+    #endif
     using namespace camera;
 
-    cam_interface = (CamInterface*)new CamUsb(_camera_device.value());
-    std::vector<CamInfo> cam_infos;
-    try {
-        if(cam_interface->listCameras(cam_infos) > 0) {
-            if(cam_interface->open(cam_infos[0])) {
-                mCamInfo = (camera::CamInfo*)cam_interface->getCameraInfo();
-            } else {
-                RTT::log(RTT::Error) << "Could not open camera " << RTT::endlog();
-            }
-        } else {
-            RTT::log(RTT::Error) << "No camera-configuration available. " << RTT::endlog();
-        }
-    } catch (std::runtime_error& e) {
-        RTT::log(RTT::Error) << "Faild to configure camera: " << e.what() << RTT::endlog();
-    }
+    cam_interface = (CamInterface*)new CamUsb(_camera_device);
+
+    camera_base::Task::configureCamera(); // calls cam_interface->setFrameSettings(*camera_frame); as well.
+ 
 
     // Set properties if attributes/controls are available.
     // INTs
@@ -103,7 +110,21 @@ void CameraTask::configureCamera() {
         return;
     }
 
-    camera_base::Task::configureCamera();
+    // Open camera.
+    std::vector<CamInfo> cam_infos;
+    try {
+        if(cam_interface->listCameras(cam_infos) > 0) {
+            if(cam_interface->open(cam_infos[0])) {
+                mCamInfo = (camera::CamInfo*)cam_interface->getCameraInfo();
+            } else {
+                RTT::log(RTT::Error) << "Could not open camera " << RTT::endlog();
+            }
+        } else {
+            RTT::log(RTT::Error) << "No camera-configuration available. " << RTT::endlog();
+        }
+    } catch (std::runtime_error& e) {
+        RTT::log(RTT::Error) << "Faild to configure camera: " << e.what() << RTT::endlog();
+    }
 }
 
 
@@ -135,8 +156,15 @@ void CameraTask::configureCamera() {
 // {
 //     CameraTaskBase::stopHook();
 // }
-// void CameraTask::cleanupHook()
-// {
-//     CameraTaskBase::cleanupHook();
-// }
+
+void CameraTask::cleanupHook() {
+    #if PRINT_DEBUG
+    std::cout << "CameraTask: cleanupHook" << std::endl;
+    #endif
+    CameraTaskBase::cleanupHook();
+    if(cam_interface != NULL) {
+        delete cam_interface;
+        cam_interface = NULL;
+    }
+}
 

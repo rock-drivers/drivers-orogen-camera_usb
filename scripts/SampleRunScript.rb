@@ -2,33 +2,29 @@
 # -*- coding: utf-8 -*-
 
 require 'orocos'
+require 'vizkit'
 include Orocos
 Orocos.initialize
 
-# setup the environment so that ruby can find the test deployment
-# ENV['PKG_CONFIG_PATH'] = "/home/neo/Desktop/orogen_camera_usb/build:#{File.expand_path("..", File.dirname(__FILE__))}/build:#{ENV['PKG_CONFIG_PATH']}"
+Orocos.run 'camera_usb_deployment' do
+    camera = TaskContext.get 'camera_usb_deployment'  
 
-Orocos.run 'camera_usb_test' do
-    camera = TaskContext.get 'CameraTask'  
+    camera.brightness = 133
+    camera.contrast = 5
+    camera.saturation = 83
+    camera.sharpness = 25
+    camera.backlight_compensation = 0
+    camera.power_line_frequency = "disabled"
 
-    #  Orocos.log_all_ports
+    camera.camera_format = :MODE_PJPG
+    camera.width = 640
+    camera.height = 480
 
-
-    sleep 1
-
-    camera.grab_mode = :Continuously
     camera.configure
     camera.start
-    sleep 1
 
-    #viewer = TaskContext.get 'camera_viewer'
-    #viewer.frame.connect_to camera.frame
-
-    #viewer.start
-
-    for i in (1..1000000)
-        sleep 0.01
-    end 
+    Vizkit.display camera.frame
+    Vizkit.exec
 
     STDERR.puts "shutting down"
 end

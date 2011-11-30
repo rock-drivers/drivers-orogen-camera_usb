@@ -29,12 +29,12 @@ task_context "CameraTask" do
     fd_driven
 end
 
-deployment "camera_usb_test" do
+deployment "camera_usb_deployment" do
     do_not_install
-
+    task("camera_usb_deployment", "camera_usb::CameraTask")
     # Declares it as periodic, with a period of 100ms
-    m = task("camera_usb_test", "CameraTask").
-        periodic(0.1)
-    m.start
+    #m = task("camera_usb_test", "CameraTask").
+    #    periodic(0.1)
+    #m.start
 end
 
