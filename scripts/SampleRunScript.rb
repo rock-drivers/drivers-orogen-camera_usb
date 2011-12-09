@@ -15,10 +15,11 @@ Orocos.run 'camera_usb_deployment' do
     camera.sharpness = 25
     camera.backlight_compensation = 0
     camera.power_line_frequency = "disabled"
+    camera.fps = 10
 
-    camera.camera_format = :MODE_PJPG
-    camera.width = 640
-    camera.height = 480
+    camera.camera_format = :MODE_JPEG # Not used, alwas set to MODE_JPEG.
+    camera.width = 1280
+    camera.height = 720
 
     camera.configure
     camera.start

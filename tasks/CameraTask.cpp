@@ -10,8 +10,7 @@ CameraTask::CameraTask(std::string const& name)
     #if PRINT_DEBUG
     std::cout << "CameraTask: constructor 1" << std::endl;
     #endif
-    // ggf. weitere parameter setzen.
-    _camera_format.set(base::samples::frame::MODE_PJPG);
+    _camera_format.set(base::samples::frame::MODE_JPEG);
 }
 
 CameraTask::CameraTask(std::string const& name, RTT::ExecutionEngine* engine)
@@ -20,6 +19,7 @@ CameraTask::CameraTask(std::string const& name, RTT::ExecutionEngine* engine)
     #if PRINT_DEBUG
     std::cout << "CameraTask: constructor 2" << std::endl;
     #endif
+    _camera_format.set(base::samples::frame::MODE_JPEG);
 }
 
 CameraTask::~CameraTask()
