@@ -1,42 +1,34 @@
 /* Generated from orogen/lib/orogen/templates/tasks/Task.cpp */
 
-#include "CameraTask.hpp"
+#include "Task.hpp"
 
 using namespace camera_usb;
 
-CameraTask::CameraTask(std::string const& name)
-    : CameraTaskBase(name)
+Task::Task(std::string const& name)
+    : TaskBase(name)
 {
-    #if PRINT_DEBUG
-    std::cout << "CameraTask: constructor 1" << std::endl;
-    #endif
+    RTT::log(RTT::Debug) << "Task: condtructor 1" << RTT::endlog();
     _camera_format.set(base::samples::frame::MODE_JPEG);
 }
 
-CameraTask::CameraTask(std::string const& name, RTT::ExecutionEngine* engine)
-    : CameraTaskBase(name, engine)
+Task::Task(std::string const& name, RTT::ExecutionEngine* engine)
+    : TaskBase(name, engine)
 {
-    #if PRINT_DEBUG
-    std::cout << "CameraTask: constructor 2" << std::endl;
-    #endif
+    RTT::log(RTT::Debug) << "Task: constructor 2" << RTT::endlog();
     _camera_format.set(base::samples::frame::MODE_JPEG);
 }
 
-CameraTask::~CameraTask()
+Task::~Task()
 {
-    #if PRINT_DEBUG
-    std::cout << "CameraTask: destructor" << std::endl;
-    #endif
+    RTT::log(RTT::Debug) << "Task: destructor" << RTT::endlog();
     if(cam_interface != NULL) {
         delete cam_interface;
         cam_interface = NULL;
     }
 }
 
-void CameraTask::configureCamera() {
-    #if PRINT_DEBUG
-    std::cout << "CameraTask: configureCamera" << std::endl;
-    #endif
+void Task::configureCamera() {
+    RTT::log(RTT::Debug) << "Task: configureCamera" << RTT::endlog();
     using namespace camera;
 
     cam_interface = (CamInterface*)new CamUsb(_camera_device);
@@ -129,39 +121,37 @@ void CameraTask::configureCamera() {
 
 
 /// The following lines are template definitions for the various state machine
-// hooks defined by Orocos::RTT. See CameraTask.hpp for more detailed
+// hooks defined by Orocos::RTT. See Task.hpp for more detailed
 // documentation about them.
 
-// bool CameraTask::configureHook()
+// bool Task::configureHook()
 // {
-//     if (! CameraTaskBase::configureHook())
+//     if (! TaskBase::configureHook())
 //         return false;
 //     return true;
 // }
-// bool CameraTask::startHook()
+// bool Task::startHook()
 // {
-//     if (! CameraTaskBase::startHook())
+//     if (! TaskBase::startHook())
 //         return false;
 //     return true;
 // }
-// void CameraTask::updateHook()
+// void Task::updateHook()
 // {
-//     CameraTaskBase::updateHook();
+//     TaskBase::updateHook();
 // }
-// void CameraTask::errorHook()
+// void Task::errorHook()
 // {
-//     CameraTaskBase::errorHook();
+//     TaskBase::errorHook();
 // }
-// void CameraTask::stopHook()
+// void Task::stopHook()
 // {
-//     CameraTaskBase::stopHook();
+//     TaskBase::stopHook();
 // }
 
-void CameraTask::cleanupHook() {
-    #if PRINT_DEBUG
-    std::cout << "CameraTask: cleanupHook" << std::endl;
-    #endif
-    CameraTaskBase::cleanupHook();
+void Task::cleanupHook() {
+    RTT::log(RTT::Debug) << "Task: cleanupHook" << RTT::endlog();
+    TaskBase::cleanupHook();
     if(cam_interface != NULL) {
         delete cam_interface;
         cam_interface = NULL;

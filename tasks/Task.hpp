@@ -1,10 +1,9 @@
 /* Generated from orogen/lib/orogen/templates/tasks/Task.hpp */
 
-#ifndef CAMERA_USB_CAMERATASK_TASK_HPP
-#define CAMERA_USB_CAMERATASK_TASK_HPP
+#ifndef CAMERA_USB_TASK_TASK_HPP
+#define CAMERA_USB_TASK_TASK_HPP
 
-#include "camera_usb/CameraTaskBase.hpp"
-
+#include "camera_usb/TaskBase.hpp"
 #include "camera_base/TaskBase.hpp"
 #include "frame_helper/FrameHelper.h"
 #include "camera_interface/CamInterface.h"
@@ -12,17 +11,17 @@
 #include "camera_usb/cam_usb.h" // Driver
 
 namespace camera_usb {
-class CameraTask : public CameraTaskBase
+class Task : public TaskBase
 {
-friend class CameraTaskBase;
+friend class TaskBase;
  protected:
     camera::CamInfo* mCamInfo;
 
  public:
-    CameraTask(std::string const& name = "orogen_camera_usb::CameraTask");
-    CameraTask(std::string const& name, RTT::ExecutionEngine* engine);
+    Task(std::string const& name = "orogen_camera_usb::Task");
+    Task(std::string const& name, RTT::ExecutionEngine* engine);
 
-    ~CameraTask();
+    ~Task();
 
     void configureCamera();
 
@@ -39,24 +38,21 @@ friend class CameraTaskBase;
      *     ...
      *   end
      */
-    #if PRINT_DEBUG
     bool configureHook() {
-        std::cout << "CameraTask: configureHook" << std::endl;
+        RTT::log(RTT::Debug) << "Task: configureHook" << RTT::endlog();
         camera_base::Task::configureHook();
     }
-    #endif
 
     /** This hook is called by Orocos when the state machine transitions
      * from Stopped to Running. If it returns false, then the component will
      * stay in Stopped. Otherwise, it goes into Running and updateHook()
      * will be called.
      */
-    #if PRINT_DEBUG
     bool startHook() {
-        std::cout << "CameraTask: startHook" << std::endl;
+        RTT::log(RTT::Debug) << "Task: startHook" << RTT::endlog();
         camera_base::Task::startHook();
     }
-    #endif
+
 
     /** This hook is called by Orocos when the component is in the Running
      * state, at each activity step. Here, the activity gives the "ticks"
@@ -72,12 +68,10 @@ friend class CameraTaskBase;
      * component is stopped and recover() needs to be called before starting
      * it again. Finally, FatalError cannot be recovered.
      */
-    #if PRINT_DEBUG
     void updateHook() {
-        std::cout << "CameraTask: updateHook" << std::endl;
+        RTT::log(RTT::Debug) << "Task: updateHook" << RTT::endlog();
         camera_base::Task::updateHook();
     }
-    #endif
 
     /** This hook is called by Orocos when the component is in the
      * RunTimeError state, at each activity step. See the discussion in
@@ -85,21 +79,18 @@ friend class CameraTaskBase;
      *
      * Call recover() to go back in the Runtime state.
      */
-    #if PRINT_DEBUG
     void errorHook() {
-        std::cout << "CameraTask: errorHook" << std::endl;
+        RTT::log(RTT::Debug) << "Task: errorHook" << RTT::endlog();
         camera_base::Task::errorHook();
     }
-    #endif
+
     /** This hook is called by Orocos when the state machine transitions
      * from Running to Stopped after stop() has been called.
      */
-    #if PRINT_DEBUG
     void stopHook() {   
-        std::cout << "CameraTask: stopHook" << std::endl;
+        RTT::log(RTT::Debug) << "Task: stopHook" << RTT::endlog();
         camera_base::Task::stopHook();
     }
-    #endif
 
     /** This hook is called by Orocos when the state machine transitions
      * from Stopped to PreOperational, requiring the call to configureHook()
