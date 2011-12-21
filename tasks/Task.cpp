@@ -27,11 +27,12 @@ Task::~Task()
     }
 }
 
-void Task::configureCamera() {
+void Task::configureCamera() 
+{
     RTT::log(RTT::Debug) << "Task: configureCamera" << RTT::endlog();
     using namespace camera;
 
-    cam_interface = (CamInterface*)new CamUsb(_camera_device);
+    cam_interface = new CamUsb(_camera_device);
 
     camera_base::Task::configureCamera(); // calls cam_interface->setFrameSettings(*camera_frame); as well.
  
@@ -105,8 +106,10 @@ void Task::configureCamera() {
     // Open camera.
     std::vector<CamInfo> cam_infos;
     try {
-        if(cam_interface->listCameras(cam_infos) > 0) {
-            if(cam_interface->open(cam_infos[0])) {
+        if(cam_interface->listCameras(cam_infos) > 0) 
+        {
+            if(cam_interface->open(cam_infos[0])) 
+            {
                 mCamInfo = (camera::CamInfo*)cam_interface->getCameraInfo();
             } else {
                 RTT::log(RTT::Error) << "Could not open camera " << RTT::endlog();
@@ -149,10 +152,12 @@ void Task::configureCamera() {
 //     TaskBase::stopHook();
 // }
 
-void Task::cleanupHook() {
+void Task::cleanupHook() 
+{
     RTT::log(RTT::Debug) << "Task: cleanupHook" << RTT::endlog();
     TaskBase::cleanupHook();
-    if(cam_interface != NULL) {
+    if(cam_interface != NULL) 
+    {
         delete cam_interface;
         cam_interface = NULL;
     }
