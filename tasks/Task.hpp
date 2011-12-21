@@ -40,7 +40,7 @@ friend class TaskBase;
      */
     bool configureHook() {
         RTT::log(RTT::Debug) << "Task: configureHook" << RTT::endlog();
-        camera_base::Task::configureHook();
+        return camera_base::Task::configureHook();
     }
 
     /** This hook is called by Orocos when the state machine transitions
@@ -50,7 +50,7 @@ friend class TaskBase;
      */
     bool startHook() {
         RTT::log(RTT::Debug) << "Task: startHook" << RTT::endlog();
-        camera_base::Task::startHook();
+        return camera_base::Task::startHook();
     }
 
 
