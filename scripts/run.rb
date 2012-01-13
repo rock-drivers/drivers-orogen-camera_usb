@@ -18,11 +18,10 @@ Orocos.run 'camera_usb_deployment' do
     camera.power_line_frequency = "disabled"
     camera.fps = 10
 
-    # Microsoft LiveCam: auto=auto(not working) manual=manual external=shutter priority none=aperture priority (default)
-    camera.exposure_mode = "none"
-    camera.exposure = 5
+    # focus mode: manual or auto
+    # focus value: 0 = invinite, 40 = close objects
     camera.focus_mode = "auto"
-    camera.focus = 40
+    camera.focus = 0
     camera.zoom = 10
 
     camera.camera_format = :MODE_JPEG # Not used, alwas set to MODE_JPEG.
