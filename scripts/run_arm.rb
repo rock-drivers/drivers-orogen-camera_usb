@@ -8,6 +8,7 @@ Orocos.initialize
 Orocos.run 'camera_usb_deployment' , :wait => 60 do 
     camera = TaskContext.get 'camera_usb_deployment'  
 
+    camera.camera_device = '/dev/video1'
     camera.brightness = 133
     camera.contrast = 5
     camera.saturation = 83
