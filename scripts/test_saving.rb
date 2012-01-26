@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 require 'orocos'
-require 'vizkit'
+require 'readline' 
+require 'jpeg_conversion'
+
 include Orocos
 Orocos.initialize
 
@@ -18,21 +20,28 @@ Orocos.run 'camera_usb_deployment' do
     camera.power_line_frequency = "disabled"
     camera.fps = 10
 
-    # focus mode: manual or auto
-    # focus value: 0 = invinite, 40 = close objects
-    camera.focus_mode = "auto"
-    camera.focus = 0
-    camera.zoom = 10
-
     camera.camera_format = :MODE_JPEG # Not used, alwas set to MODE_JPEG.
-    camera.width = 1280
-    camera.height = 720
+    camera.width = 640 #1280
+    camera.height = 480 # 720
 
     camera.configure
     camera.start
 
-    Vizkit.display camera.frame
-    Vizkit.exec
+    frame_reader = camera.frame.reader
+    counter = 0
+    conversion = Conversion::JpegConversion.new
 
+    while true
+
+        frame = frame_reader.read
+        if frame
+            puts "Store test_frame_#{counter}"
+            conversion::store_frame("test_frame_#{counter}", frame)
+            counter = counter + 1
+        end
+        sleep 2 
+    end
+
+    Readline::readline("Press ENTER to exit")
     STDERR.puts "shutting down"
 end

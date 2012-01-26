@@ -27,11 +27,13 @@ Task::~Task()
     }
 }
 
-void Task::configureCamera() {
+void Task::configureCamera() 
+{
     RTT::log(RTT::Debug) << "Task: configureCamera" << RTT::endlog();
     using namespace camera;
 
-    cam_interface = (CamInterface*)new CamUsb(_camera_device);
+    CamUsb* cam_usb = new CamUsb(_camera_device);
+    cam_interface = (CamInterface*)cam_usb;
 
     camera_base::Task::configureCamera(); // calls cam_interface->setFrameSettings(*camera_frame); as well.
  
@@ -48,25 +50,25 @@ void Task::configureCamera() {
     if(cam_interface->isAttribAvail(int_attrib::ContrastValue))
         cam_interface->setAttrib(camera::int_attrib::ContrastValue,_contrast);
     else
-        RTT::log(RTT::Info) << "BrightnessValue is not supported by the camera" << RTT::endlog();
+        RTT::log(RTT::Info) << "ContrastValue is not supported by the camera" << RTT::endlog();
 
     // Set saturation.
     if(cam_interface->isAttribAvail(int_attrib::SaturationValue))
         cam_interface->setAttrib(camera::int_attrib::SaturationValue,_saturation);
     else
-        RTT::log(RTT::Info) << "BrightnessValue is not supported by the camera" << RTT::endlog();
+        RTT::log(RTT::Info) << "SaturationValue is not supported by the camera" << RTT::endlog();
 
     // Set sharpness.
     if(cam_interface->isAttribAvail(int_attrib::SharpnessValue))
         cam_interface->setAttrib(camera::int_attrib::SharpnessValue,_sharpness);
     else
-        RTT::log(RTT::Info) << "BrightnessValue is not supported by the camera" << RTT::endlog();
+        RTT::log(RTT::Info) << "SharpnessValue is not supported by the camera" << RTT::endlog();
 
     // Set backlight compensation.
     if(cam_interface->isAttribAvail(int_attrib::BacklightCompensation))
         cam_interface->setAttrib(camera::int_attrib::BacklightCompensation,_backlight_compensation);
     else
-        RTT::log(RTT::Info) << "BrightnessValue is not supported by the camera" << RTT::endlog();
+        RTT::log(RTT::Info) << "BacklightCompensation is not supported by the camera" << RTT::endlog();
 
     // ENUMs
     //setting _power_line_frequency
@@ -102,11 +104,37 @@ void Task::configureCamera() {
         return;
     }
 
+    // V4L2s (not part of the camera interface yet)
+
+    // FOCUS
+    // Set focus to 'auto', otherwise to 'manual' and to the defined value (if 
+    // both control IDs are available).
+    if(cam_usb->isV4L2AttribAvail(V4L2_CID_FOCUS_AUTO)) {
+        if(_focus_mode.value() == "auto") 
+        {
+            cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_AUTO, 1);
+        }
+        else if(_focus_mode.value() == "manual") 
+        {
+            if(cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_AUTO, 0) &&
+                cam_usb->isV4L2AttribAvail(V4L2_CID_FOCUS_ABSOLUTE)) {
+                cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_ABSOLUTE, _focus.value());
+            }
+        }
+    }
+    // ZOOM
+    if(cam_usb->isV4L2AttribAvail(V4L2_CID_ZOOM_ABSOLUTE)) {
+        cam_usb->setV4L2Attrib(V4L2_CID_ZOOM_ABSOLUTE, _zoom.value());
+    }
+    
+
     // Open camera.
     std::vector<CamInfo> cam_infos;
     try {
-        if(cam_interface->listCameras(cam_infos) > 0) {
-            if(cam_interface->open(cam_infos[0])) {
+        if(cam_interface->listCameras(cam_infos) > 0) 
+        {
+            if(cam_interface->open(cam_infos[0])) 
+            {
                 mCamInfo = (camera::CamInfo*)cam_interface->getCameraInfo();
             } else {
                 RTT::log(RTT::Error) << "Could not open camera " << RTT::endlog();
@@ -149,10 +177,12 @@ void Task::configureCamera() {
 //     TaskBase::stopHook();
 // }
 
-void Task::cleanupHook() {
+void Task::cleanupHook() 
+{
     RTT::log(RTT::Debug) << "Task: cleanupHook" << RTT::endlog();
     TaskBase::cleanupHook();
-    if(cam_interface != NULL) {
+    if(cam_interface != NULL) 
+    {
         delete cam_interface;
         cam_interface = NULL;
     }
