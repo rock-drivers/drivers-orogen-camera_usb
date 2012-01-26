@@ -7,7 +7,7 @@ require 'readline'
 include Orocos
 Orocos.initialize
 
-Orocos.run 'camera_usb_deployment' do
+Orocos.run 'camera_usb_deployment' , :wait => 60 do 
     camera = TaskContext.get 'camera_usb_deployment'  
 
     camera.camera_device = "/dev/video0"
