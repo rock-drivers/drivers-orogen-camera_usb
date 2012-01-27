@@ -1,5 +1,5 @@
 <package>
-  <description brief="Integrates the usb-driver into the framework allows to request images from webcams and gumstix cameras.">
+  <description brief="oroGen component for the camera_usb library.">
   
   </description>
   <author>Stefan Haase/stefan.haase@dfki.de</author>
