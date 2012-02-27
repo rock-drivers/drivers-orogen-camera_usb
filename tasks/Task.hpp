@@ -4,11 +4,11 @@
 #define CAMERA_USB_TASK_TASK_HPP
 
 #include "camera_usb/TaskBase.hpp"
-#include "camera_base/TaskBase.hpp"
-#include "frame_helper/FrameHelper.h"
-#include "camera_interface/CamInterface.h"
 
-#include "camera_usb/cam_usb.h" // Driver
+namespace camera
+{
+    class CamInfo;
+}
 
 namespace camera_usb {
 class Task : public TaskBase

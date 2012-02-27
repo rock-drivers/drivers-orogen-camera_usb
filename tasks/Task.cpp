@@ -2,6 +2,12 @@
 
 #include "Task.hpp"
 
+#include "camera_base/TaskBase.hpp"
+#include "frame_helper/FrameHelper.h"
+#include "camera_interface/CamInterface.h"
+
+#include "camera_usb/cam_usb.h" // Driver
+
 using namespace camera_usb;
 
 Task::Task(std::string const& name)
