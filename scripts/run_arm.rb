@@ -8,7 +8,9 @@ Orocos.initialize
 Orocos.run 'camera_usb_deployment' , :wait => 60 do 
     camera = TaskContext.get 'camera_usb_deployment'  
 
-    camera.camera_device = '/dev/video1'
+    # Using fix udev symlinks on the gumstix.	
+    # gumstix camera: /dev/omap_camera, microsoft web cam: /dev/microsoft_life_cam
+    camera.camera_device = '/dev/omap_camera'
     camera.brightness = 133
     camera.contrast = 5
     camera.saturation = 83
@@ -18,8 +20,8 @@ Orocos.run 'camera_usb_deployment' , :wait => 60 do
     camera.fps = 10
 
     camera.camera_format = :MODE_JPEG # Not used, alwas set to MODE_JPEG.
-    camera.width = 1280
-    camera.height = 720
+    camera.width = 640	
+    camera.height = 480
 
     camera.configure
     camera.start
