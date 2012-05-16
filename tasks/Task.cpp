@@ -33,7 +33,7 @@ Task::~Task()
     }
 }
 
-void Task::configureCamera() 
+bool Task::configureCamera() 
 {
     RTT::log(RTT::Debug) << "Task: configureCamera" << RTT::endlog();
     using namespace camera;
@@ -41,8 +41,8 @@ void Task::configureCamera()
     CamUsb* cam_usb = new CamUsb(_camera_device);
     cam_interface = (CamInterface*)cam_usb;
 
-    camera_base::Task::configureCamera(); // calls cam_interface->setFrameSettings(*camera_frame); as well.
- 
+    if (!camera_base::Task::configureCamera()) // calls cam_interface->setFrameSettings(*camera_frame); as well.
+        return false;
 
     // Set properties if attributes/controls are available.
     // INTs
@@ -106,8 +106,8 @@ void Task::configureCamera()
     else
     {
         RTT::log(RTT::Error) << "Power Line Frequency "+ _power_line_frequency.value() + " is not supported!" << RTT::endlog();
-        error(UNKOWN_PARAMETER);
-        return;
+        report(UNKOWN_PARAMETER);
+        return false;
     }
 
     // V4L2s (not part of the camera interface yet)
