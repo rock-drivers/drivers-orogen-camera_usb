@@ -37,6 +37,9 @@ friend class TaskBase;
      *     needs_configuration
      *     ...
      *   end
+     *
+     * Creates and opens the camera-usb connection. After the camera has been opened
+     * it can be configured.
      */
     bool configureHook() {
         RTT::log(RTT::Debug) << "Task: configureHook" << RTT::endlog();

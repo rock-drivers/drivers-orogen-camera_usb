@@ -27,14 +27,17 @@ Orocos.run 'camera_usb_deployment' do
     camera.zoom = 10
 
     camera.camera_format = :MODE_JPEG # Not used, alwas set to MODE_JPEG.
-    camera.width = 1280
-    camera.height = 720
+    camera.width = 640
+    camera.height = 480
 
     camera.configure
     camera.start
 
-    Vizkit.display camera.frame
-    Vizkit.exec
+   #Vizkit.display camera.frame
+   #Vizkit.exec
+   while true
+   	sleep 1
+   end
 
     STDERR.puts "shutting down"
 end

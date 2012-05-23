@@ -41,8 +41,30 @@ bool Task::configureCamera()
     CamUsb* cam_usb = new CamUsb(_camera_device);
     cam_interface = (CamInterface*)cam_usb;
 
-    if (!camera_base::Task::configureCamera()) // calls cam_interface->setFrameSettings(*camera_frame); as well.
+    // Open camera.
+    std::vector<CamInfo> cam_infos;
+    try {
+        if(cam_interface->listCameras(cam_infos) > 0) 
+        {
+            if(cam_interface->open(cam_infos[0])) 
+            {
+                mCamInfo = (camera::CamInfo*)cam_interface->getCameraInfo();
+            } else {
+                RTT::log(RTT::Error) << "Could not open camera " << RTT::endlog();
+                return false;
+            }
+        } else {
+            RTT::log(RTT::Error) << "No camera-configuration available. " << RTT::endlog();
+            return false;
+        }
+    } catch (std::runtime_error& e) {
+        RTT::log(RTT::Error) << "Failed to open camera for configuration: " << e.what() << RTT::endlog();
         return false;
+    }
+
+    if (!camera_base::Task::configureCamera()) { // calls cam_interface->setFrameSettings(*camera_frame); as well.
+        return false;
+    }
 
     // Set properties if attributes/controls are available.
     // INTs
@@ -115,49 +137,43 @@ bool Task::configureCamera()
     // FOCUS
     // Set focus to 'auto', otherwise to 'manual' and to the defined value (if 
     // both control IDs are available). Not working for e-CAM32?
-    if(_focus_mode.value() == "auto") 
-    {
-        cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_AUTO, 1);
-    }
-    else if(_focus_mode.value() == "manual") 
-    {
-        if(cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_AUTO, 0)) {
-            cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_ABSOLUTE, _focus.value());
+    if(cam_usb->isV4L2AttribAvail(V4L2_CID_FOCUS_AUTO)) {
+        if(_focus_mode.value() == "auto") 
+        {
+            cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_AUTO, 1);
+        }
+        else if(_focus_mode.value() == "manual") 
+        {
+            if(cam_usb->isV4L2AttribAvail(V4L2_CID_FOCUS_ABSOLUTE) &&
+                    cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_AUTO, 0)) {
+                cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_ABSOLUTE, _focus.value());
+            }
         }
     }
     
     // FLIP
-    cam_usb->setV4L2Attrib(V4L2_CID_HFLIP, _horizontal_flip.value());
-    cam_usb->setV4L2Attrib(V4L2_CID_VFLIP, _vertical_flip.value());
+    if(cam_usb->isV4L2AttribAvail(V4L2_CID_HFLIP))
+        cam_usb->setV4L2Attrib(V4L2_CID_HFLIP, _horizontal_flip.value());
+    if(cam_usb->isV4L2AttribAvail(V4L2_CID_VFLIP))
+        cam_usb->setV4L2Attrib(V4L2_CID_VFLIP, _vertical_flip.value());
 
-    // ZOOM
-    cam_usb->setV4L2Attrib(V4L2_CID_ZOOM_ABSOLUTE, _zoom.value());
+        // ZOOM
+    if(cam_usb->isV4L2AttribAvail(V4L2_CID_ZOOM_ABSOLUTE))
+        cam_usb->setV4L2Attrib(V4L2_CID_ZOOM_ABSOLUTE, _zoom.value());
 
-    // SPECIAL E-CAM32 CONTROLS
-    cam_usb->setV4L2Attrib(V4L2_SENS_TRIG_FOCUS, _single_auto_focus.value());
-    cam_usb->setV4L2Attrib(V4L2_SENS_FCS_OLAY, _focus_overlay.value());
-    cam_usb->setV4L2Attrib(V4L2_SENS_EFFECTS, _effects.value());
-    cam_usb->setV4L2Attrib(V4L2_SENS_FOCUS_DISABLE, _focus_complete.value());
-    cam_usb->setV4L2Attrib(V4L2_SENS_TEST_PATTERN, _test_pattern.value());
-
-
-    // Open camera.
-    std::vector<CamInfo> cam_infos;
-    try {
-        if(cam_interface->listCameras(cam_infos) > 0) 
-        {
-            if(cam_interface->open(cam_infos[0])) 
-            {
-                mCamInfo = (camera::CamInfo*)cam_interface->getCameraInfo();
-            } else {
-                RTT::log(RTT::Error) << "Could not open camera " << RTT::endlog();
-            }
-        } else {
-            RTT::log(RTT::Error) << "No camera-configuration available. " << RTT::endlog();
-        }
-    } catch (std::runtime_error& e) {
-        RTT::log(RTT::Error) << "Faild to configure camera: " << e.what() << RTT::endlog();
-    }
+        // SPECIAL E-CAM32 CONTROLS
+    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_TRIG_FOCUS))
+        cam_usb->setV4L2Attrib(V4L2_SENS_TRIG_FOCUS, _single_auto_focus.value());
+    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_FOCUS_DISABLE))
+        cam_usb->setV4L2Attrib(V4L2_SENS_FOCUS_DISABLE, _focus_overlay.value());
+    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_EFFECTS))
+        cam_usb->setV4L2Attrib(V4L2_SENS_EFFECTS, _effects.value());
+    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_FOCUS_DISABLE))
+        cam_usb->setV4L2Attrib(V4L2_SENS_FOCUS_DISABLE, _focus_complete.value());
+    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_TEST_PATTERN))
+        cam_usb->setV4L2Attrib(V4L2_SENS_TEST_PATTERN, _test_pattern.value());
+    
+    return true;
 }
 
 
