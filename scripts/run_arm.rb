@@ -19,6 +19,17 @@ Orocos.run 'camera_usb_deployment' , :wait => 60 do
     camera.power_line_frequency = "disabled"
     camera.fps = 10
 
+    camera.focus_mode = "auto"
+    camera.focus = 0
+    camera.horizontal_flip = 0
+    camera.vertical_flip = 0
+    camera.zoom = 10
+    camera.single_auto_focus = 0
+    camera.focus_overlay = 0
+    camera.effects = 0
+    camera.focus_complete = 0
+    camera.test_pattern = 0
+
     camera.camera_format = :MODE_JPEG # Not used, alwas set to MODE_JPEG.
     camera.width = 640	
     camera.height = 480

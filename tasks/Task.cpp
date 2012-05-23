@@ -114,25 +114,32 @@ void Task::configureCamera()
 
     // FOCUS
     // Set focus to 'auto', otherwise to 'manual' and to the defined value (if 
-    // both control IDs are available).
-    if(cam_usb->isV4L2AttribAvail(V4L2_CID_FOCUS_AUTO)) {
-        if(_focus_mode.value() == "auto") 
-        {
-            cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_AUTO, 1);
-        }
-        else if(_focus_mode.value() == "manual") 
-        {
-            if(cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_AUTO, 0) &&
-                cam_usb->isV4L2AttribAvail(V4L2_CID_FOCUS_ABSOLUTE)) {
-                cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_ABSOLUTE, _focus.value());
-            }
-        }
+    // both control IDs are available). Not working for e-CAM32?
+    if(_focus_mode.value() == "auto") 
+    {
+        cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_AUTO, 1);
     }
-    // ZOOM
-    if(cam_usb->isV4L2AttribAvail(V4L2_CID_ZOOM_ABSOLUTE)) {
-        cam_usb->setV4L2Attrib(V4L2_CID_ZOOM_ABSOLUTE, _zoom.value());
+    else if(_focus_mode.value() == "manual") 
+    {
+        if(cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_AUTO, 0)) {
+            cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_ABSOLUTE, _focus.value());
+        }
     }
     
+    // FLIP
+    cam_usb->setV4L2Attrib(V4L2_CID_HFLIP, _horizontal_flip.value());
+    cam_usb->setV4L2Attrib(V4L2_CID_VFLIP, _vertical_flip.value());
+
+    // ZOOM
+    cam_usb->setV4L2Attrib(V4L2_CID_ZOOM_ABSOLUTE, _zoom.value());
+
+    // SPECIAL E-CAM32 CONTROLS
+    cam_usb->setV4L2Attrib(V4L2_SENS_TRIG_FOCUS, _single_auto_focus.value());
+    cam_usb->setV4L2Attrib(V4L2_SENS_FCS_OLAY, _focus_overlay.value());
+    cam_usb->setV4L2Attrib(V4L2_SENS_EFFECTS, _effects.value());
+    cam_usb->setV4L2Attrib(V4L2_SENS_FOCUS_DISABLE, _focus_complete.value());
+    cam_usb->setV4L2Attrib(V4L2_SENS_TEST_PATTERN, _test_pattern.value());
+
 
     // Open camera.
     std::vector<CamInfo> cam_infos;

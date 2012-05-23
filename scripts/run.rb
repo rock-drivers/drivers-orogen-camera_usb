@@ -22,6 +22,8 @@ Orocos.run 'camera_usb_deployment' do
     # focus value: 0 = invinite, 40 = close objects
     camera.focus_mode = "auto"
     camera.focus = 0
+    camera.horizontal_flip = 0
+    camera.vertical_flip = 0
     camera.zoom = 10
 
     camera.camera_format = :MODE_JPEG # Not used, alwas set to MODE_JPEG.
