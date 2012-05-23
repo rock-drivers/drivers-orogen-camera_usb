@@ -5,6 +5,7 @@ require 'orocos'
 require 'readline' 
 
 include Orocos
+Nameservice::enable(:CORBA, :host => '192.168.101.121')
 Orocos.initialize
 
 Orocos.run 'camera_usb_deployment' , :wait => 60 do 

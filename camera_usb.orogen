@@ -56,10 +56,10 @@ end
 
 deployment "camera_usb_deployment" do
     do_not_install
-    task("camera_usb_deployment", "camera_usb::Task")
+    task("camera_usb_deployment", "camera_usb::Task").periodic(0.01)
     # Declares it as periodic, with a period of 100ms
-    #m = task("camera_usb_test", "CameraTask").
+    #task("camera_usb_test", "CameraTask").
     #    periodic(0.1)
-    #m.start
+    # m.start
 end
 

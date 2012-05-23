@@ -38,7 +38,7 @@ Orocos.run 'camera_usb_deployment' , :wait => 60 do
     camera.start
 
     while true
-        sleep 0.01
+        sleep 0.1
     end
 
     STDERR.puts "shutting down"
