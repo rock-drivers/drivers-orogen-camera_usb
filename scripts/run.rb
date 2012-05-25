@@ -1,5 +1,7 @@
 #! /usr/bin/env ruby
 # -*- coding: utf-8 -*-
+# If you want to start the Microsoft Life Cam or the Gumstix camera e-CAM32
+# you should use the corresponding ruby run-script. 
 
 require 'orocos'
 require 'vizkit'
@@ -8,7 +10,7 @@ Orocos.initialize
 
 Orocos.run 'camera_usb_deployment' do
     camera = TaskContext.get 'camera_usb_deployment'  
-
+  
     camera.camera_device = "/dev/video0"
     camera.brightness = 133
     camera.contrast = 5
@@ -16,7 +18,8 @@ Orocos.run 'camera_usb_deployment' do
     camera.sharpness = 25
     camera.backlight_compensation = 0
     camera.power_line_frequency = "disabled"
-    camera.fps = 10
+
+    camera.fps = 20
 
     # focus mode: manual or auto
     # focus value: 0 = invinite, 40 = close objects
@@ -33,11 +36,11 @@ Orocos.run 'camera_usb_deployment' do
     camera.configure
     camera.start
 
-   #Vizkit.display camera.frame
-   #Vizkit.exec
-   while true
-   	sleep 1
-   end
+   Vizkit.display camera.frame
+   Vizkit.exec
+   #while true
+   #	sleep 1
+   #end
 
     STDERR.puts "shutting down"
 end

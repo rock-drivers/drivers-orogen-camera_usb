@@ -4,7 +4,7 @@
 require 'orocos'
 require 'vizkit'
 include Orocos
-Nameservice::enable(:CORBA, :host => "10.250.3.216")
+Nameservice::enable(:CORBA, :host => "192.168.111.60")
 Orocos.initialize
 
 camera = TaskContext.get 'camera_usb_deployment'  

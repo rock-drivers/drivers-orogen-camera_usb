@@ -10,52 +10,49 @@ task_context "Task" do
     property('camera_device', 'string','/dev/video0').
     	doc 'camera device, default is /dev/video0'
 
-    # Additional attributes.
-    property('brightness', 'int', 133).
-        doc 'Black level of the image, e-CAM32: -48 to 48 (default 0)'
-    property('contrast', 'int', 5).
-        doc 'Picture contrast or luma gain, e-CAM32: -12 to 12 (default 0)'
-    property('saturation', 'int', 83).
-        doc 'Picture color saturation or chroma gain, e-CAM32: -48 to 48 (default 0)'
-    property('sharpness', 'int', 25).
-        doc 'Adjust the sharpness, set minimal value (0) to disable the filter, e-CAM32: -3 to 3 (default 0)'
-    property('backlight_compensation', 'int', 0).
-        doc 'Adjust the backlight compensation, set minimal value (0) to disable, not available for e-CAM32'
-    property('power_line_frequency', 'string','60Hz').
-    	doc 'Enable to avoid flicker, values (disabled, 50Hz, 60Hz, none), not available for e-CAM32'
-
-    # Not supported by camera-interface yet, set by additional V4L2 function
     # V4L2_CID_BASE
+    property('brightness', 'int', 133).
+        doc 'Black level of the image'
+    property('contrast', 'int', 5).
+        doc 'Picture contrast or luma gain'
+    property('saturation', 'int', 83).
+        doc 'Picture color saturation or chroma gain'
+    property('sharpness', 'int', 25).
+        doc 'Adjust the sharpness, set minimal value (0) to disable the filter'
+    property('backlight_compensation', 'int', 0).
+        doc 'Adjust the backlight compensation, set minimal value (0) to disable'
+    property('power_line_frequency', 'string','60Hz').
+    	doc 'Enable to avoid flicker, values (disabled, 50Hz, 60Hz, none)'
     property('focus_mode', 'string', 'auto').
         doc 'Focus mode, values (auto, manual)'
     property('focus', 'int', 3).
-        doc 'Focus value if mode not auto, Microsoft LiveCam: 0 to 40 (default 3), eCAM32: 0 to 1023 (default 0), write-only'
+        doc 'Focus value if mode not auto'
     property('horizontal_flip', 'int', 0).
-        doc 'Gumstix: 0 to 1, default 0'
+        doc 'Horizontal flip.'
     property('vertical_flip', 'int', 0).
-        doc 'Gumstix: 0 to 1, default 0'
+        doc 'Vertical flip'
 
     # V4L2_CID_CAMERA_CLASS_BASE
     property('zoom', 'int', 0).
-        doc 'Zoom, Microsoft LiveCam: 0 to 10, default 0'
+        doc 'Zoom value'
 
     # V4L2_CID_PRIVATE_BASE (special controls of the gumstix camera e-CAM32)
     property('single_auto_focus', 'int', 0).
-        doc 'Gumstix: 0 to 1, default 0'
+        doc 'e-CAM32: 0 to 1, default 0'
     property('focus_overlay', 'int', 0).
-        doc 'Gumstix: 0 to 1, default 0, write-only'
+        doc 'e-CAM32: 0 to 1, default 0, write-only'
     property('effects', 'int', 0).
-        doc 'Gumstix: 0 to 7, default 0'
+        doc 'e-CAM32: 0 to 7, default 0'
     property('focus_complete', 'int', 0).
-        doc 'Gumstix: 0 to 1, default 0, write-only'
+        doc 'e-CAM32: 0 to 1, default 0, write-only'
     property('test_pattern', 'int', 0).
-        doc 'Gumstix: 0 to 1, default 1'
+        doc 'e-CAM32: 0 to 1, default 1'
 
-    fd_driven
+    #fd_driven
+    periodic 0.01
 end
 
 deployment "camera_usb_deployment" do
-    do_not_install
     task("camera_usb_deployment", "camera_usb::Task").periodic(0.01)
     # Declares it as periodic, with a period of 100ms
     #task("camera_usb_test", "CameraTask").
