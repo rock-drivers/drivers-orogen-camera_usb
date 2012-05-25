@@ -11,24 +11,21 @@ Orocos.run 'camera_usb_deployment' , :wait => 60 do
     # Using fix udev symlinks on the gumstix.	
     # gumstix camera: /dev/omap_camera, microsoft web cam: /dev/microsoft_life_cam
     camera.camera_device = '/dev/omap_camera'
-    camera.brightness = 133
-    camera.contrast = 5
-    camera.saturation = 83
-    camera.sharpness = 25
-    camera.backlight_compensation = 0
-    camera.power_line_frequency = "disabled"
+    camera.brightness = 0 # -48 to 48 (step 1), default: 0
+    camera.contrast = 5 # -12 to 12 (step 1), default: 0
+    camera.saturation = 0 # -48 to 48 (step 1), default: 0
+    camera.sharpness = 0 # -40 to 40 (step 1), default: 0
     camera.fps = 10
 
-    camera.focus_mode = "auto"
-    camera.focus = 0
-    camera.horizontal_flip = 0
-    camera.vertical_flip = 0
-    camera.zoom = 10
-    camera.single_auto_focus = 0
-    camera.focus_overlay = 0
-    camera.effects = 0
-    camera.focus_complete = 0
-    camera.test_pattern = 0
+    camera.focus_mode = "auto" # 0 to 1 (step 1), default: 0
+    camera.focus = 0 # 0 to 1023 (step 1), default: 0
+    camera.horizontal_flip = 0 # 0 to 1 (step 1), default: 0
+    camera.vertical_flip = 0 # 0 to 1 (step 1), default: 0
+    camera.single_auto_focus = 0 # 0 to 1 (step 1), default: 0
+    camera.focus_overlay = 1 # 0 to 1 (step 1), default: 0
+    camera.effects = 3 # 0 to 7 (step 1), default: 0
+    camera.focus_complete = 0 # 0 to 1 (step 1), default: 0
+    camera.test_pattern = 1 # 0 to 1 (step 1), default: 1
 
     camera.camera_format = :MODE_JPEG # Not used, alwas set to MODE_JPEG.
     camera.width = 640	
