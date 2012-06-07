@@ -23,7 +23,7 @@ Orocos.run 'camera_usb_deployment' , :wait => 60 do
     camera.vertical_flip = 0 # 0 to 1 (step 1), default: 0
     camera.single_auto_focus = 0 # 0 to 1 (step 1), default: 0
     camera.focus_overlay = 1 # 0 to 1 (step 1), default: 0
-    camera.effects = 3 # 0 to 7 (step 1), default: 0
+    camera.effects = 0 # 0 to 7 (step 1), default: 0
     camera.focus_complete = 0 # 0 to 1 (step 1), default: 0
     camera.test_pattern = 1 # 0 to 1 (step 1), default: 1
 
