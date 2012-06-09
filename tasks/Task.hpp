@@ -11,6 +11,11 @@ namespace camera
 }
 
 namespace camera_usb {
+/**
+ * If a not valid image size is set, the driver will choose valid values which will lead
+ * to a resize of the JPEG data which will lead to a corrupted JPEG-file. So, take sure
+ * to set a valid 'width' and 'height'.  
+ */
 class Task : public TaskBase
 {
 friend class TaskBase;
