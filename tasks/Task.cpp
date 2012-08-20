@@ -162,15 +162,15 @@ bool Task::configureCamera()
         cam_usb->setV4L2Attrib(V4L2_CID_ZOOM_ABSOLUTE, _zoom.value());
 
         // SPECIAL E-CAM32 CONTROLS
-    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_TRIG_FOCUS))
+    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_TRIG_FOCUS, "Single Auto focus"))
         cam_usb->setV4L2Attrib(V4L2_SENS_TRIG_FOCUS, _single_auto_focus.value());
-    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_FOCUS_DISABLE))
-        cam_usb->setV4L2Attrib(V4L2_SENS_FOCUS_DISABLE, _focus_overlay.value());
-    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_EFFECTS))
+    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_FCS_OLAY, "Focus Overlay"))
+        cam_usb->setV4L2Attrib(V4L2_SENS_FCS_OLAY, _focus_overlay.value());
+    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_EFFECTS, "effects"))
         cam_usb->setV4L2Attrib(V4L2_SENS_EFFECTS, _effects.value());
-    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_FOCUS_DISABLE))
+    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_FOCUS_DISABLE, "Focus complete"))
         cam_usb->setV4L2Attrib(V4L2_SENS_FOCUS_DISABLE, _focus_complete.value());
-    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_TEST_PATTERN))
+    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_TEST_PATTERN, "Test pattern"))
         cam_usb->setV4L2Attrib(V4L2_SENS_TEST_PATTERN, _test_pattern.value());
     
     return true;
