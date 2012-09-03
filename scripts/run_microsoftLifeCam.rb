@@ -10,7 +10,7 @@ Orocos.initialize
 Orocos.run 'camera_usb_deployment' do
     camera = TaskContext.get 'camera_usb_deployment'  
   
-    camera.camera_device = "/dev/microsoft_life_cam"
+    camera.camera_device = "/dev/video0"
     camera.brightness = 133 # 30 to 255 (step 1), default: 133
     camera.contrast = 5 # 0 to 10 (step 1), default: 5 
     camera.saturation = 83 # 0 to 200 (step 1), default: 83    
@@ -30,7 +30,7 @@ Orocos.run 'camera_usb_deployment' do
     camera.configure
     camera.start
 
-   Vizkit.display camera.frame
+   Vizkit.display camera#.frame
    Vizkit.exec
    #while true
    #	sleep 1

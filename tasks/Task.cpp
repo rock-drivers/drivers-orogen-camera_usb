@@ -66,6 +66,8 @@ bool Task::configureCamera()
         return false;
     }
 
+    // FPS is already set.
+
     // Set properties if attributes/controls are available.
     // INTs
     // Set brightness.
@@ -136,7 +138,7 @@ bool Task::configureCamera()
 
     // FOCUS
     // Set focus to 'auto', otherwise to 'manual' and to the defined value (if 
-    // both control IDs are available). Not working for e-CAM32?
+    // both control IDs are available).
     if(cam_usb->isV4L2AttribAvail(V4L2_CID_FOCUS_AUTO)) {
         if(_focus_mode.value() == "auto") 
         {
