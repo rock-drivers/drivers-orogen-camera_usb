@@ -105,6 +105,11 @@ friend class TaskBase;
      * before calling start() again.
      */
     void cleanupHook();
+    
+    /**
+     * Can be used to set the default parameters of the camera.
+     */
+    void setControlsToDefault();
 };
 } // end namespace camera_usb
 

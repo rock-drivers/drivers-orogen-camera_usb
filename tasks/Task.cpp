@@ -37,7 +37,7 @@ bool Task::configureCamera()
 {
     RTT::log(RTT::Debug) << "Task: configureCamera" << RTT::endlog();
     using namespace camera;
-
+    
     CamUsb* cam_usb = new CamUsb(_camera_device);
     cam_interface = (CamInterface*)cam_usb;
 
@@ -66,42 +66,45 @@ bool Task::configureCamera()
         return false;
     }
 
+    cam_usb->printCameraInformations();
+
     // FPS is already set.
 
     // Set properties if attributes/controls are available.
     // INTs
     // Set brightness.
-    if(cam_interface->isAttribAvail(int_attrib::BrightnessValue))
+    if(cam_interface->isAttribAvail(int_attrib::BrightnessValue) && _brightness.get() >= 0)
         cam_interface->setAttrib(camera::int_attrib::BrightnessValue,_brightness);
     else
         RTT::log(RTT::Info) << "BrightnessValue is not supported by the camera" << RTT::endlog();
 
     // Set contrast.
-    if(cam_interface->isAttribAvail(int_attrib::ContrastValue))
+    if(cam_interface->isAttribAvail(int_attrib::ContrastValue) && _contrast.get() >= 0)
         cam_interface->setAttrib(camera::int_attrib::ContrastValue,_contrast);
     else
         RTT::log(RTT::Info) << "ContrastValue is not supported by the camera" << RTT::endlog();
 
     // Set saturation.
-    if(cam_interface->isAttribAvail(int_attrib::SaturationValue))
+    if(cam_interface->isAttribAvail(int_attrib::SaturationValue) && _saturation.get() >= 0)
         cam_interface->setAttrib(camera::int_attrib::SaturationValue,_saturation);
     else
         RTT::log(RTT::Info) << "SaturationValue is not supported by the camera" << RTT::endlog();
 
     // Set sharpness.
-    if(cam_interface->isAttribAvail(int_attrib::SharpnessValue))
+    if(cam_interface->isAttribAvail(int_attrib::SharpnessValue) && _sharpness.get() >= 0)
         cam_interface->setAttrib(camera::int_attrib::SharpnessValue,_sharpness);
     else
         RTT::log(RTT::Info) << "SharpnessValue is not supported by the camera" << RTT::endlog();
 
     // Set backlight compensation.
-    if(cam_interface->isAttribAvail(int_attrib::BacklightCompensation))
+    if(cam_interface->isAttribAvail(int_attrib::BacklightCompensation) && _backlight_compensation.get() >= 0)
         cam_interface->setAttrib(camera::int_attrib::BacklightCompensation,_backlight_compensation);
     else
         RTT::log(RTT::Info) << "BacklightCompensation is not supported by the camera" << RTT::endlog();
 
     // ENUMs
     //setting _power_line_frequency
+    
     if(_power_line_frequency.value() == "disabled")
     {
         if(cam_interface->isAttribAvail(camera::enum_attrib::PowerLineFrequencyDisabled))
@@ -123,7 +126,7 @@ bool Task::configureCamera()
         else
             RTT::log(RTT::Info) << "PowerLineFrequencyTo60 is not supported by the camera" << RTT::endlog();
     }
-    else if(_power_line_frequency.value() == "none")
+    else if(_power_line_frequency.value() == "none" || _power_line_frequency.value().empty())
     {
         //do nothing
     }
@@ -139,7 +142,7 @@ bool Task::configureCamera()
     // FOCUS
     // Set focus to 'auto', otherwise to 'manual' and to the defined value (if 
     // both control IDs are available).
-    if(cam_usb->isV4L2AttribAvail(V4L2_CID_FOCUS_AUTO)) {
+    if(cam_usb->isV4L2AttribAvail(V4L2_CID_FOCUS_AUTO) && !_focus_mode.value().empty()) {
         if(_focus_mode.value() == "auto") 
         {
             cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_AUTO, 1);
@@ -147,32 +150,45 @@ bool Task::configureCamera()
         else if(_focus_mode.value() == "manual") 
         {
             if(cam_usb->isV4L2AttribAvail(V4L2_CID_FOCUS_ABSOLUTE) &&
-                    cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_AUTO, 0)) {
+                    cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_AUTO, 0) &&
+                    _focus.value() >= 0) {
                 cam_usb->setV4L2Attrib(V4L2_CID_FOCUS_ABSOLUTE, _focus.value());
             }
         }
     }
     
+    // GAIN
+    if(cam_usb->isV4L2AttribAvail(V4L2_CID_AUTOGAIN)) {
+        if(_gain_mode_auto.value()) 
+            cam_usb->setV4L2Attrib(V4L2_CID_AUTOGAIN, 1); // auto
+        else
+            cam_usb->setV4L2Attrib(V4L2_CID_AUTOGAIN, 0);
+    }
+    
+    if(cam_usb->isV4L2AttribAvail(V4L2_CID_GAIN) && !_gain_mode_auto.value()) {
+        cam_usb->setV4L2Attrib(V4L2_CID_GAIN, _gain.value());
+    }
+    
     // FLIP
-    if(cam_usb->isV4L2AttribAvail(V4L2_CID_HFLIP))
+    if(cam_usb->isV4L2AttribAvail(V4L2_CID_HFLIP) && _horizontal_flip.value() >= 0)
         cam_usb->setV4L2Attrib(V4L2_CID_HFLIP, _horizontal_flip.value());
-    if(cam_usb->isV4L2AttribAvail(V4L2_CID_VFLIP))
+    if(cam_usb->isV4L2AttribAvail(V4L2_CID_VFLIP) && _vertical_flip.value() >= 0)
         cam_usb->setV4L2Attrib(V4L2_CID_VFLIP, _vertical_flip.value());
 
-        // ZOOM
-    if(cam_usb->isV4L2AttribAvail(V4L2_CID_ZOOM_ABSOLUTE))
+    // ZOOM
+    if(cam_usb->isV4L2AttribAvail(V4L2_CID_ZOOM_ABSOLUTE) && _zoom.value() >= 0)
         cam_usb->setV4L2Attrib(V4L2_CID_ZOOM_ABSOLUTE, _zoom.value());
 
-        // SPECIAL E-CAM32 CONTROLS
-    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_TRIG_FOCUS, "Single Auto focus"))
+    // SPECIAL E-CAM32 CONTROLS
+    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_TRIG_FOCUS, "Single Auto focus") && _single_auto_focus.value() >= 0)
         cam_usb->setV4L2Attrib(V4L2_SENS_TRIG_FOCUS, _single_auto_focus.value());
-    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_FCS_OLAY, "Focus Overlay"))
+    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_FCS_OLAY, "Focus Overlay") && _focus_overlay.value() >= 0)
         cam_usb->setV4L2Attrib(V4L2_SENS_FCS_OLAY, _focus_overlay.value());
-    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_EFFECTS, "effects"))
+    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_EFFECTS, "effects") && _effects.value() >= 0)
         cam_usb->setV4L2Attrib(V4L2_SENS_EFFECTS, _effects.value());
-    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_FOCUS_DISABLE, "Focus complete"))
+    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_FOCUS_DISABLE, "Focus complete") && _focus_complete.value() >= 0)
         cam_usb->setV4L2Attrib(V4L2_SENS_FOCUS_DISABLE, _focus_complete.value());
-    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_TEST_PATTERN, "Test pattern"))
+    if(cam_usb->isV4L2AttribAvail(V4L2_SENS_TEST_PATTERN, "Test pattern") && _test_pattern.value() >= 0)
         cam_usb->setV4L2Attrib(V4L2_SENS_TEST_PATTERN, _test_pattern.value());
     
     return true;
@@ -218,4 +234,3 @@ void Task::cleanupHook()
         cam_interface = NULL;
     }
 }
-

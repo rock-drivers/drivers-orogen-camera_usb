@@ -10,42 +10,43 @@ task_context "Task" do
     property('camera_device', 'string','/dev/video0').
     	doc 'camera device, default is /dev/video0'
 
+    # Default property values (-1, empty string) will be ignored.
     # V4L2_CID_BASE
-    property('brightness', 'int', 133).
+    property('brightness', 'int', -1).
         doc 'Black level of the image'
-    property('contrast', 'int', 5).
+    property('contrast', 'int', -1).
         doc 'Picture contrast or luma gain'
-    property('saturation', 'int', 83).
+    property('saturation', 'int', -1).
         doc 'Picture color saturation or chroma gain'
-    property('sharpness', 'int', 25).
+    property('sharpness', 'int', -1).
         doc 'Adjust the sharpness, set minimal value (0) to disable the filter'
-    property('backlight_compensation', 'int', 0).
+    property('backlight_compensation', 'int', -1).
         doc 'Adjust the backlight compensation, set minimal value (0) to disable'
-    property('power_line_frequency', 'string','60Hz').
+    property('power_line_frequency', 'string').
     	doc 'Enable to avoid flicker, values (disabled, 50Hz, 60Hz, none)'
-    property('focus_mode', 'string', 'auto').
+    property('focus_mode', 'string').
         doc 'Focus mode, values (auto, manual)'
-    property('focus', 'int', 3).
+    property('focus', 'int', -1).
         doc 'Focus value if mode not auto'
-    property('horizontal_flip', 'int', 0).
+    property('horizontal_flip', 'int', -1).
         doc 'Horizontal flip.'
-    property('vertical_flip', 'int', 0).
+    property('vertical_flip', 'int', -1).
         doc 'Vertical flip'
 
     # V4L2_CID_CAMERA_CLASS_BASE
-    property('zoom', 'int', 0).
+    property('zoom', 'int', -1).
         doc 'Zoom value'
 
     # V4L2_CID_PRIVATE_BASE (special controls of the gumstix camera e-CAM32)
-    property('single_auto_focus', 'int', 0).
+    property('single_auto_focus', 'int', -1).
         doc 'e-CAM32: 0 to 1, default 0'
-    property('focus_overlay', 'int', 0).
+    property('focus_overlay', 'int', -1).
         doc 'e-CAM32: 0 to 1, default 0, write-only'
-    property('effects', 'int', 0).
+    property('effects', 'int', -1).
         doc 'e-CAM32: 0 to 7, default 0'
-    property('focus_complete', 'int', 0).
+    property('focus_complete', 'int', -1).
         doc 'e-CAM32: 0 to 1, default 0, write-only'
-    property('test_pattern', 'int', 0).
+    property('test_pattern', 'int', -1).
         doc 'e-CAM32: 0 to 1, default 1'
 
     #fd_driven
