@@ -59,5 +59,6 @@ deployment "camera_usb_deployment" do
     #task("camera_usb_test", "CameraTask").
     #    periodic(0.1)
     # m.start
+    add_default_logger
 end
 
