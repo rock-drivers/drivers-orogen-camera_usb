@@ -9,4 +9,5 @@
   <depend package="base/types" />
   <depend package="drivers/orogen/camera_base" />
   <depend package="drivers/camera_usb" />
+  <depend package="gui/vizkit" optional="1"/>
 </package>
