@@ -36,7 +36,7 @@ Task::~Task()
 bool Task::configureCamera() 
 {
     RTT::log(RTT::Debug) << "Task: configureCamera" << RTT::endlog();
-    using namespace camera;
+    using namespace camera;  
     
     CamUsb* cam_usb = new CamUsb(_camera_device);
     cam_interface = (CamInterface*)cam_usb;
@@ -190,6 +190,27 @@ bool Task::configureCamera()
         cam_usb->setV4L2Attrib(V4L2_SENS_FOCUS_DISABLE, _focus_complete.value());
     if(cam_usb->isV4L2AttribAvail(V4L2_SENS_TEST_PATTERN, "Test pattern") && _test_pattern.value() >= 0)
         cam_usb->setV4L2Attrib(V4L2_SENS_TEST_PATTERN, _test_pattern.value());
+    
+    // It is possible that we receive another image format than requested (e.g. 1280x720 instead of 1280x768).
+    // In this case camera_frame and output_frame size would differ which would
+    // require a continuous rescaling. To avoid this we adapt the size of the frames here.
+    base::samples::frame::frame_size_t size;
+    base::samples::frame::frame_mode_t mode;
+    uint8_t color_depth;
+    cam_usb->getFrameSettings(size, mode, color_depth);    
+    
+    using namespace base::samples::frame;
+    frame_mode_t output_frame_mode = _output_format.value();
+    if(output_frame_mode == MODE_UNDEFINED) {
+        output_frame_mode = _camera_format.value();
+    }
+    
+    Frame* frame = new Frame(size.width, size.height, _channel_data_depth, _camera_format.value()); 
+    camera_frame.reset(frame);
+
+    frame = new Frame(size.width * _scale_x, size.height * _scale_y, _channel_data_depth, output_frame_mode); 
+    output_frame.reset(frame);	
+    frame = NULL;
     
     return true;
 }

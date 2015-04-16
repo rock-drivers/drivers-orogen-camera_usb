@@ -28,6 +28,10 @@ friend class TaskBase;
 
     ~Task();
 
+    /** 
+     * Starts and configure the camera. At the end the image width/height are
+     * adapted regarding to the real image size.
+     */
     bool configureCamera();
 
     /** This hook is called by Orocos when the state machine transitions
