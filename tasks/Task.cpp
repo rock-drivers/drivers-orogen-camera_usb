@@ -66,8 +66,6 @@ bool Task::configureCamera()
         return false;
     }
 
-    cam_usb->printCameraInformations();
-
     // FPS is already set.
 
     // Set properties if attributes/controls are available.
@@ -157,6 +155,14 @@ bool Task::configureCamera()
         }
     }
     
+    // WHITE BALANCE
+    if(_whitebalance_mode.value() == "manual") {
+        if(cam_usb->isV4L2AttribAvail(V4L2_CID_WHITE_BALANCE_TEMPERATURE) &&
+                _white_balance_temperature.value() >= 0) {
+            cam_usb->setV4L2Attrib(V4L2_CID_WHITE_BALANCE_TEMPERATURE, _white_balance_temperature.value());
+        }
+    }
+    
     // GAIN
     if(cam_usb->isV4L2AttribAvail(V4L2_CID_AUTOGAIN)) {
         if(_gain_mode_auto.value()) 
@@ -211,6 +217,8 @@ bool Task::configureCamera()
     frame = new Frame(size.width * _scale_x, size.height * _scale_y, _channel_data_depth, output_frame_mode); 
     output_frame.reset(frame);	
     frame = NULL;
+    
+    cam_usb->printCameraInformations();
     
     return true;
 }
