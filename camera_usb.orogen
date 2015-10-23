@@ -32,6 +32,8 @@ task_context "Task" do
         doc 'Horizontal flip.'
     property('vertical_flip', 'int', -1).
         doc 'Vertical flip'
+    property('white_balance_temperature', 'int', -1).
+        doc 'Whitebalance temperatue, can be used if whitebalance_mode is set to manual'
 
     # V4L2_CID_CAMERA_CLASS_BASE
     property('zoom', 'int', -1).
