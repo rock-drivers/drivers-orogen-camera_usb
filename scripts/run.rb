@@ -17,6 +17,8 @@ Orocos.run 'camera_usb_deployment' do
     camera.output_format = :MODE_JPEG
     camera.width = 640
     camera.height = 480
+    
+    camera.grab_mode = :SingleFrame
 
     camera.configure
     camera.start
