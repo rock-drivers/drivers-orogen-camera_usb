@@ -46,9 +46,6 @@ bool Task::configureCamera()
     try {
         if(cam_interface->listCameras(cam_infos) > 0) 
         {
-            // open() activates the V4L2 configuration mode.
-            // In this mode all camera infos are requested and write operations
-            // are performed to detect non-writeable controls.
             if(cam_interface->open(cam_infos[0])) 
             {
                 mCamInfo = (camera::CamInfo*)cam_interface->getCameraInfo();
@@ -64,6 +61,7 @@ bool Task::configureCamera()
         RTT::log(RTT::Error) << "Failed to open camera for configuration: " << e.what() << RTT::endlog();
         return false;
     }
+
     if (!camera_base::Task::configureCamera()) { // calls cam_interface->setFrameSettings(*camera_frame); as well.
         return false;
     }
@@ -73,54 +71,34 @@ bool Task::configureCamera()
     // Set properties if attributes/controls are available.
     // INTs
     // Set brightness.
-    if(_brightness.get() <= 0) {
-        RTT::log(RTT::Info) << "Property brightness not set, using the default value of the camera." << RTT::endlog();
-    } else {
-        if(cam_interface->isAttribAvail(int_attrib::BrightnessValue))
-            cam_interface->setAttrib(camera::int_attrib::BrightnessValue,_brightness);
-        else
-            RTT::log(RTT::Info) << "BrightnessValue is not supported by the camera" << RTT::endlog();
-    }
+    if(cam_interface->isAttribAvail(int_attrib::BrightnessValue) && _brightness.get() >= 0)
+        cam_interface->setAttrib(camera::int_attrib::BrightnessValue,_brightness);
+    else
+        RTT::log(RTT::Info) << "BrightnessValue is not supported by the camera" << RTT::endlog();
 
     // Set contrast.
-    if(_contrast.get() <= 0) {
-        RTT::log(RTT::Info) << "Property contrast not set, using the default value of the camera." << RTT::endlog();
-    } else {
-        if(cam_interface->isAttribAvail(int_attrib::ContrastValue))
-            cam_interface->setAttrib(camera::int_attrib::ContrastValue,_contrast);
-        else
-            RTT::log(RTT::Info) << "ContrastValue is not supported by the camera" << RTT::endlog();
-    }
+    if(cam_interface->isAttribAvail(int_attrib::ContrastValue) && _contrast.get() >= 0)
+        cam_interface->setAttrib(camera::int_attrib::ContrastValue,_contrast);
+    else
+        RTT::log(RTT::Info) << "ContrastValue is not supported by the camera" << RTT::endlog();
 
     // Set saturation.
-    if(_saturation.get() <= 0) {
-        RTT::log(RTT::Info) << "Property saturation not set, using the default value of the camera." << RTT::endlog();
-    } else {     
-        if(cam_interface->isAttribAvail(int_attrib::SaturationValue))
-            cam_interface->setAttrib(camera::int_attrib::SaturationValue,_saturation);
-        else
-            RTT::log(RTT::Info) << "SaturationValue is not supported by the camera" << RTT::endlog();
-    }
+    if(cam_interface->isAttribAvail(int_attrib::SaturationValue) && _saturation.get() >= 0)
+        cam_interface->setAttrib(camera::int_attrib::SaturationValue,_saturation);
+    else
+        RTT::log(RTT::Info) << "SaturationValue is not supported by the camera" << RTT::endlog();
 
     // Set sharpness.
-    if(_sharpness.get() <= 0) {
-        RTT::log(RTT::Info) << "Property sharpness not set, using the default value of the camera." << RTT::endlog();
-    } else { 
-        if(cam_interface->isAttribAvail(int_attrib::SharpnessValue))
-            cam_interface->setAttrib(camera::int_attrib::SharpnessValue,_sharpness);
-        else
-            RTT::log(RTT::Info) << "SharpnessValue is not supported by the camera" << RTT::endlog();
-    }
+    if(cam_interface->isAttribAvail(int_attrib::SharpnessValue) && _sharpness.get() >= 0)
+        cam_interface->setAttrib(camera::int_attrib::SharpnessValue,_sharpness);
+    else
+        RTT::log(RTT::Info) << "SharpnessValue is not supported by the camera" << RTT::endlog();
 
     // Set backlight compensation.
-    if(_backlight_compensation.get() <= 0) {
-        RTT::log(RTT::Info) << "Property backlight_compensation not set, using the default value of the camera." << RTT::endlog();
-    } else { 
-        if(cam_interface->isAttribAvail(int_attrib::BacklightCompensation) && _backlight_compensation.get() >= 0)
-            cam_interface->setAttrib(camera::int_attrib::BacklightCompensation,_backlight_compensation);
-        else
-            RTT::log(RTT::Info) << "BacklightCompensation is not supported by the camera" << RTT::endlog();
-    }
+    if(cam_interface->isAttribAvail(int_attrib::BacklightCompensation) && _backlight_compensation.get() >= 0)
+        cam_interface->setAttrib(camera::int_attrib::BacklightCompensation,_backlight_compensation);
+    else
+        RTT::log(RTT::Info) << "BacklightCompensation is not supported by the camera" << RTT::endlog();
 
     // ENUMs
     //setting _power_line_frequency
