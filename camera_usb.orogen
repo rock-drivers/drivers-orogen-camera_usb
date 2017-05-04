@@ -16,10 +16,6 @@ task_context "Task" do
         doc 'Black level of the image'
     property('contrast', 'int', -1).
         doc 'Picture contrast or luma gain'
-    property('saturation', 'int', -1).
-        doc 'Picture color saturation or chroma gain'
-    property('sharpness', 'int', -1).
-        doc 'Adjust the sharpness, set minimal value (0) to disable the filter'
     property('backlight_compensation', 'int', -1).
         doc 'Adjust the backlight compensation, set minimal value (0) to disable'
     property('power_line_frequency', 'string').
