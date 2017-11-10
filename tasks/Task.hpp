@@ -4,6 +4,7 @@
 #define CAMERA_USB_TASK_TASK_HPP
 
 #include "camera_usb/TaskBase.hpp"
+#include "base/Timeout.hpp"
 
 namespace camera
 {
@@ -21,6 +22,7 @@ class Task : public TaskBase
 friend class TaskBase;
  protected:
     camera::CamInfo* mCamInfo;
+    base::Timeout timeout;
 
  public:
     Task(std::string const& name = "orogen_camera_usb::Task");
@@ -60,10 +62,7 @@ friend class TaskBase;
      * stay in Stopped. Otherwise, it goes into Running and updateHook()
      * will be called.
      */
-    bool startHook() {
-        RTT::log(RTT::Debug) << "Task: startHook" << RTT::endlog();
-        return camera_base::Task::startHook();
-    }
+    bool startHook();
 
 
     /** This hook is called by Orocos when the component is in the Running
@@ -80,10 +79,7 @@ friend class TaskBase;
      * component is stopped and recover() needs to be called before starting
      * it again. Finally, FatalError cannot be recovered.
      */
-    void updateHook() {
-        RTT::log(RTT::Debug) << "Task: updateHook" << RTT::endlog();
-        camera_base::Task::updateHook();
-    }
+    void updateHook();
 
     /** This hook is called by Orocos when the component is in the
      * RunTimeError state, at each activity step. See the discussion in
@@ -118,4 +114,3 @@ friend class TaskBase;
 } // end namespace camera_usb
 
 #endif
-

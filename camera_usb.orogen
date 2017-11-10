@@ -46,6 +46,10 @@ task_context "Task" do
         doc 'e-CAM32: 0 to 1, default 0, write-only'
     property('test_pattern', 'int', -1).
         doc 'e-CAM32: 0 to 1, default 1'
+        
+    property('io_timeout', 'double', 2.0)
+        
+    error_states :IO_ERROR
 
     #fd_driven
     periodic 0.01
@@ -59,4 +63,3 @@ deployment "camera_usb_deployment" do
     # m.start
     add_default_logger
 end
-

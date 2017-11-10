@@ -234,16 +234,30 @@ bool Task::configureCamera()
 //         return false;
 //     return true;
 // }
-// bool Task::startHook()
-// {
-//     if (! TaskBase::startHook())
-//         return false;
-//     return true;
-// }
-// void Task::updateHook()
-// {
-//     TaskBase::updateHook();
-// }
+bool Task::startHook()
+{
+    RTT::log(RTT::Debug) << "Task: startHook" << RTT::endlog();
+    if (! TaskBase::startHook())
+        return false;
+        
+    timeout = base::Timeout(base::Time::fromSeconds(_io_timeout.value()));
+        
+    return true;
+}
+void Task::updateHook()
+{
+    RTT::log(RTT::Debug) << "Task: updateHook" << RTT::endlog();
+    TaskBase::updateHook();
+    
+    if(camera_frame.valid() && camera_frame->getStatus() == base::samples::frame::STATUS_VALID)
+    {
+        timeout.restart();
+    }
+    else if(timeout.elapsed())
+    {
+        exception(IO_ERROR);
+    }
+}
 // void Task::errorHook()
 // {
 //     TaskBase::errorHook();
